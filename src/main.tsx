@@ -11,7 +11,7 @@ const Root = ReactDOM.createRoot($rootDiv)
 
 Root.render(
 	<React.StrictMode>
-		<Maxiim3DatePicker />
+		<Maxiim3DatePicker inputLabel={'Date of Birth'} />
 	</React.StrictMode>
 )
 //endregion

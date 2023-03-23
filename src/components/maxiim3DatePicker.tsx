@@ -3,10 +3,10 @@ import {CalendarContext, initialCalendarContextFactory} from "../context"
 import {DatePicker} from "./DatePicker"
 import React from "react"
 
-export function Maxiim3DatePicker() {
+export function Maxiim3DatePicker({inputLabel}: {inputLabel: string}) {
 	return (
 		<CalendarContext.Provider value={initialCalendarContextFactory()}>
-			<DatePicker inputLabel={"Date of birth"} />
+			<DatePicker inputLabel={inputLabel} />
 		</CalendarContext.Provider>
 	)
 }

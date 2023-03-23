@@ -1,29 +1,49 @@
-# This is a Template
+# React Date Picker Component
 
 ---
 
+A customizable date picker component for React that allows users to select a date from a calendar.
+
+## Author
+
+This component was created by [Maxiim3](https://github.com/maxiim3).
+
 ## Installation
 
-```bash
-    npm install
+```shell
+npm i maxiim3-date-picker
+```
+
+Alternatively, you can use Yarn:
+
+```shell
+yarn add  maxiim3-date-picker
 ```
 
 ## Usage
 
-```bash
-    npm run dev
+```tsx
+import {Maxiim3DatePicker} from " maxiim3-date-picker"
+
+function App() {
+	return (
+		<div>
+			<h1>Select a Date</h1>
+			<Maxiim3DatePicker inputLabel={"Date of Birth"} />
+		</div>
+	)
+}
 ```
 
-## Build
+## Props
 
-```bash
-    npm run build
-```
+The `Maxiim3DatePicker` component accepts the following props:
+
+| Prop Name    | Type     | Required |          Description           |
+|--------------|----------|----------|:------------------------------:|
+| `inputLabel` | `string` | Yes      | The label for the input field. |
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
-
-## Author
-
-[Your Name]
+This component is licensed under the [MIT License](https://opensource.org/licenses/MIT).<br>
+Feel free to use it in your own projects or modify it to suit your needs.
