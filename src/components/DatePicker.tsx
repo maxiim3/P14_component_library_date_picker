@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import React, {useCallback, useState} from "react"
+import React, {useCallback, useEffect, useRef, useState} from "react"
 import {OClassName, OClick} from "../types"
 import {createPortal} from "react-dom"
 import {Calendar, convertDateToLocalString, useCalendarApi} from "./Calendar"
@@ -21,10 +21,10 @@ const ContainerStyled = styled.div`
 	flex-flow: nowrap;
 	justify-content: space-between;
 	align-items: center;
-	border: 1px dashed green;
 	width: 450px;
-	height: 85px;
-	padding: 6px 8px;
+	background-color: hsl(0, 0%, 95%);
+	border-radius: 4px;
+	padding: 4px 8px;
 	margin-inline: auto;
 	gap: 4px;
 	position: relative;
@@ -106,11 +106,29 @@ const OpenCalendarButton = styled(({onOpen, isOpened, className}: TOpenCalendarB
  * @return {JSX.Element}
  * @constructor
  */
-export function DatePicker() {
+export function DatePicker({inputLabel}: {inputLabel: string}) {
 	//region state
 
+	const slug = useRef(inputLabel.trim().toLowerCase().split(" ").join("-")).current
 	const {calendar} = useCalendarApi()
 	const [calendarVisibility, setCalendarVisibility] = useState(false)
+
+	useEffect(() => {
+		// 	todo add a listener to the document to close the calendar when clicking outside
+		// 	todo add a listener to the document to close the calendar when pressing the escape key
+		// todo : optional :  add keyboard navigation
+		// todo add to local storage
+		const saveDate = () => {
+			if (calendar?.selectedDate) {
+				if (sessionStorage.getItem(slug)) {
+					sessionStorage.removeItem(slug)
+				}
+				sessionStorage.setItem(slug, calendar.selectedDate.toDateString())
+			}
+		}
+
+		saveDate()
+	}, [calendar])
 	//endregion
 
 	//region handlers
@@ -130,11 +148,12 @@ export function DatePicker() {
 	return (
 		<>
 			<ContainerStyled>
-				<h2> Date de naissance</h2>
+				<h2>{inputLabel}</h2>
 				<p>
-					{calendar?.selectedDate
-						? convertDateToLocalString(calendar?.selectedDate)
-						: "-- -- --"
+					{
+						calendar?.selectedDate
+							? convertDateToLocalString(calendar?.selectedDate)
+							: "-- -- --"
 						// : convertDateToLocalString(calendar.today)
 					}
 				</p>

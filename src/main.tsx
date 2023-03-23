@@ -14,7 +14,7 @@ const Root = ReactDOM.createRoot($rootDiv)
 function App() {
 	return (
 		<CalendarContext.Provider value={initialCalendarContextFactory()}>
-			<DatePicker />
+			<DatePicker inputLabel={"Date of birth"} />
 		</CalendarContext.Provider>
 	)
 }

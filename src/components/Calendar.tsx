@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from "react"
+import React, {useContext, useMemo, useState} from "react"
 import styled, {css} from "styled-components"
 import {CalendarContext, ICalendarContext, OCalendarApi} from "../context"
 import {OButtonProps, OCalendarContextProp, OClassName, OClick} from "../types"
@@ -8,7 +8,7 @@ import {AiOutlineCheck} from "react-icons/all"
 //region models
 /**
  * @description Interface for the particule of a day in the calendar
- * @see createDayCell
+ * @see dayCellFactory
  * @interface ICalendarDayCell
  */
 interface ICalendarDayCell {
@@ -28,13 +28,53 @@ interface ICalendarDayCell {
  * @param {ICalendarDayCell} props
  * @return {{dayIndex: number | undefined, dayOfWeek: number | undefined, fullDate: Date | undefined, isToday: boolean, isSelected: boolean, isBlank: boolean}}
  */
-const createDayCell = (props: ICalendarDayCell) => {
+// const dayCellFactory = (props: ICalendarDayCell) => {
+// 	const isBlank = props.isBlank || false
+// 	const dayIndex = props?.dayIndex || undefined
+// 	const dayOfWeek = props?.dayOfWeek ?? undefined
+// 	const fullDate = props?.fullDate || undefined
+// 	const isToday = props?.isToday || false
+// 	const isSelected = false
+//
+// 	const dayModel = {
+// 		dayIndex,
+// 		dayOfWeek,
+// 		isBlank,
+// 		fullDate,
+// 		isToday,
+// 		isSelected,
+// 	}
+//
+// 	type ActionsProps = {
+// 		type: "setIsSelected"
+// 		payload: boolean
+// 	}
+//
+// 	function reducer(prev: ICalendarDayCell, action: ActionsProps) {
+// 		switch (action.type) {
+// 			case "setIsSelected":
+// 				return {...prev, isSelected: action.payload}
+// 			default:
+// 				return prev
+// 		}
+// 	}
+//
+// 	const [dayCell, dispatchDayCell] = useReducer(reducer, dayModel)
+// 	const setIsSelected = (value: boolean) => {
+// 		dispatchDayCell({type: "setIsSelected", payload: value})
+// 	}
+//
+// 	return {
+// 		...dayCell,
+// 		setIsSelected,
+// 	}
+// }
+const dayCellFactory = (props: ICalendarDayCell) => {
 	const isBlank = props.isBlank || false
 	const dayIndex = props?.dayIndex || undefined
 	const dayOfWeek = props?.dayOfWeek ?? undefined
 	const fullDate = props?.fullDate || undefined
 	const isToday = props?.isToday || false
-	const isSelected = props?.isSelected || false
 
 	return {
 		dayIndex,
@@ -42,9 +82,9 @@ const createDayCell = (props: ICalendarDayCell) => {
 		isBlank,
 		fullDate,
 		isToday,
-		isSelected,
 	}
 }
+type ODayCellFactory = ReturnType<typeof dayCellFactory>
 //endregion
 
 //region utils
@@ -166,7 +206,7 @@ function calculateDayPadding(firstWeekDay: number) {
  * @param {Date} date
  * @return {ICalendarDayCell[]}
  * @see Calendar
- * @see createDayCell
+ * @see dayCellFactory
  * @see ICalendarDayCell
  * @function
  * @utils
@@ -182,11 +222,11 @@ function mapDays(date: Date) {
 	const firstWeekDay = firstDayOfTheWeek(visibleMonth, visibleYear)
 	const dayPadding = calculateDayPadding(firstWeekDay)
 
-	const days = []
+	const days: ODayCellFactory[] = []
 	for (let i = 1; i <= dayPadding + numberOfDays; i++) {
 		if (i <= dayPadding) {
 			const blankDay: ICalendarDayCell = {isBlank: true}
-			days.push(createDayCell(blankDay))
+			days.push(dayCellFactory(blankDay))
 		} else {
 			const d = i - dayPadding
 			const date = new Date(visibleYear, visibleMonth, d)
@@ -201,7 +241,7 @@ function mapDays(date: Date) {
 					date.getFullYear() === todayYear,
 				isSelected: false,
 			}
-			days.push(createDayCell(newDay))
+			days.push(dayCellFactory(newDay))
 		}
 	}
 
@@ -397,11 +437,17 @@ const DayOfWeekCell = styled.span`
  * @component
  * @see Calendar
  */
-const DayCell = styled.span<ICalendarDayCell>`
+const DayCell = styled.span<ODayCellFactory & {isSelected: boolean}>`
 	${props => {
 		if (props.isBlank)
 			return css`
 				background-color: gray;
+			`
+
+		if (props.isSelected)
+			return css`
+				background-color: rgb(255, 99, 71, 0.4);
+				color: white;
 			`
 		if (props.isToday)
 			return css`
@@ -484,7 +530,7 @@ const BackToTodayButton = styled(
 	}
 )`
 	place-self: center;
-  padding: 8px;
+	padding: 8px;
 `
 
 const ValidateButton = styled(({handler: onClose, className}: OButtonProps & OClassName) => {
@@ -492,12 +538,12 @@ const ValidateButton = styled(({handler: onClose, className}: OButtonProps & OCl
 		<BasedButton
 			className={className}
 			onClick={onClose}>
-			<AiOutlineCheck/> OK
+			<AiOutlineCheck /> OK
 		</BasedButton>
 	)
 })`
 	place-self: center;
-  padding: 8px;
+	padding: 8px;
 `
 
 /**
@@ -510,12 +556,100 @@ const ValidateButton = styled(({handler: onClose, className}: OButtonProps & OCl
  * @see Calendar
  * @see ICalendarContext
  */
-const VisibleDate = styled((props: OCalendarContextProp & OClassName) => (
-	<span className={props.className}>
-		<p>{convertMonthToString(props.date.displayedDate.getMonth())}</p>
-		<p>{props.date.displayedDate.getFullYear()}</p>
-	</span>
-))`
+const VisibleDate = styled((props: OClassName) => {
+	//region State
+	const {calendar, setDisplayedDate} = useCalendarApi() // Calendar Context
+
+	const [editableMonth, setEditableMonth] = useState(false) // toggles State between editable and not editable
+	const [editableYear, setEditableYear] = useState(false) // toggles State between editable and not editable
+
+	const [localMonthState, setLocalMonthState] = useState(calendar.today.getMonth()) // local state to display the default value of the select
+	const [localYearState, setLocalYearState] = useState(calendar.today.getFullYear()) // local state to display the default value of the select
+	//endregion
+	//region handlers
+	const updateMonth = (e: OClick) => {
+		e.preventDefault()
+		const {value} = e.currentTarget as HTMLButtonElement
+		const selectedMonth = parseInt(value)
+		const currentVisibleDate = calendar.displayedDate
+		const updatedDate = new Date(currentVisibleDate.setMonth(selectedMonth))
+		setDisplayedDate(e, updatedDate)
+		setEditableMonth(false)
+		setLocalMonthState(selectedMonth)
+	}
+
+	const updateYear = (e: OClick) => {
+		e.preventDefault()
+		const {value} = e.currentTarget as HTMLButtonElement
+		const selectedYear = parseInt(value)
+		const currentVisibleDate = calendar.displayedDate
+		const updatedDate = new Date(currentVisibleDate.setFullYear(selectedYear))
+		setDisplayedDate(e, updatedDate)
+		setEditableYear(false)
+		setLocalYearState(selectedYear)
+	}
+	//endregion
+
+	return (
+		<span className={props.className}>
+			{(() => {
+				if (editableMonth)
+					return (
+						<select
+							onChange={updateMonth}
+							name="month"
+							defaultValue={localMonthState}
+							id="month">
+							{Array.from({length: 12}, (_, i) => i).map(month => {
+								return (
+									<option
+										key={crypto.randomUUID()}
+										value={month}>
+										{convertMonthToString(month)}
+									</option>
+								)
+							})}
+						</select>
+					)
+				return (
+					<p onClick={() => setEditableMonth(true)}>
+						{convertMonthToString(calendar.displayedDate.getMonth())}
+					</p>
+				)
+			})()}
+			{(() => {
+				if (editableYear)
+					return (
+						<select
+							name="year"
+							onChange={updateYear}
+							defaultValue={localYearState}
+							id="year">
+							{Array.from(
+								{length: 80},
+								(_, i) => i + calendar.today.getFullYear() - 80 + 1
+							)
+								.reverse()
+								.map(year => {
+									return (
+										<option
+											key={crypto.randomUUID()}
+											value={year}>
+											{year}
+										</option>
+									)
+								})}
+						</select>
+					)
+				return (
+					<p onClick={() => setEditableYear(true)}>
+						{calendar.displayedDate.getFullYear()}
+					</p>
+				)
+			})()}
+		</span>
+	)
+})`
 	display: flex;
 	font-family: inherit;
 	gap: 8px;
@@ -548,18 +682,26 @@ function HeaderRow() {
  * @molecule
  * @see Calendar
  * @see DayCell
- * @param {ICalendarDayCell[]} days - Array of days to render
+ * @param {ODayCellFactory[]} days - Array of days to render
  * @return {JSX.Element}
  * @constructor
  */
-function RowsOfDays({days}: {days: ICalendarDayCell[]}) {
-	const {setSelectedDate} = useCalendarApi()
+function RowsOfDays({days}: {days: ODayCellFactory[]}) {
+	const {setSelectedDate, calendar} = useCalendarApi()
+	const handleSelectDay = (e: OClick, day: ODayCellFactory) => {
+		e.preventDefault()
+		setSelectedDate(e, day.fullDate!)
+	}
+
 	return (
 		<>
 			{days.map(day => (
 				<DayCell
+					isSelected={
+						day.fullDate === calendar.selectedDate
+					} /*todo Bug selection feedback is not persistant*/
 					key={crypto.randomUUID()}
-					onClick={(e: OClick) => setSelectedDate(e, day.fullDate!)}
+					onClick={(e: OClick) => handleSelectDay(e, day)}
 					{...day}>
 					{day.dayIndex}
 				</DayCell>
@@ -603,7 +745,6 @@ export const Calendar = ({onClose}: CalendarProps) => {
 	const {displayedDate} = calendar
 	const mayDays = useMemo(() => initDaysMapping(displayedDate), [displayedDate])
 	//endregion
-
 	//region handlers
 	function previousMonth(e: OClick) {
 		let getPreviousMonth = displayedDate.getMonth() - 1
@@ -633,7 +774,7 @@ export const Calendar = ({onClose}: CalendarProps) => {
 				<Header>
 					<Navigation>
 						<NavButton onClick={previousMonth}>{"<"}</NavButton>
-						<VisibleDate date={calendar} />
+						<VisibleDate />
 						<NavButton onClick={nextMonth}>{">"}</NavButton>
 					</Navigation>
 					<CloseButton handler={onClose} />

@@ -1,4 +1,4 @@
-import {MouseEvent, MouseEventHandler, ReactNode} from "react"
+import {ChangeEvent, MouseEvent, MouseEventHandler, ReactNode} from "react"
 import {ICalendarContext} from "./context"
 
 export type ODate = {
@@ -33,7 +33,7 @@ export type ODescription = {
 export type OPath = {
 	path: string
 }
-export type OClick = MouseEvent<HTMLButtonElement>
+export type OClick = MouseEvent<HTMLElement> | ChangeEvent<HTMLSelectElement>
 
 export type OChildren = {
 	children: ReactNode
