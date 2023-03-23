@@ -1,7 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import {DatePicker} from "./components/DatePicker"
-import {CalendarContext, initialCalendarContextFactory} from "./context"
+import {Maxiim3DatePicker} from "./components/maxiim3DatePicker"
 
 //region __ROOT
 const $rootDiv: HTMLElement = document.getElementById("root") as HTMLDivElement
@@ -10,18 +9,9 @@ const Root = ReactDOM.createRoot($rootDiv)
 
 /* todo next release add darkMode*/
 
-//region App
-function App() {
-	return (
-		<CalendarContext.Provider value={initialCalendarContextFactory()}>
-			<DatePicker inputLabel={"Date of birth"} />
-		</CalendarContext.Provider>
-	)
-}
-
 Root.render(
 	<React.StrictMode>
-		<App />
+		<Maxiim3DatePicker />
 	</React.StrictMode>
 )
 //endregion
