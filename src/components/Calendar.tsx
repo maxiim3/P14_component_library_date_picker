@@ -4,6 +4,7 @@ import {CalendarContext, ICalendarContext, OCalendarApi} from "../context"
 import {OButtonProps, OCalendarContextProp, OClassName, OClick} from "../types"
 import BasedButton from "./atoms/based.button.styled"
 import {AiOutlineCheck} from "react-icons/all"
+import {theme} from "../Theme"
 
 //region models
 /**
@@ -315,7 +316,7 @@ const Container = styled.div`
 	border-radius: 8px;
 	font-size: 0.8rem;
 	padding: 8px 12px;
-	background: white;
+	background: ${theme.mono(98)};
 `
 
 /**
@@ -446,28 +447,28 @@ const DayCell = styled.span<ODayCellFactory & {isSelected: boolean}>`
 
 		if (props.isSelected)
 			return css`
-				background-color: rgb(255, 99, 71, 0.4);
-				color: white;
+				background-color: ${theme.accent(80)};
+				color: ${theme.accent(34)};
 			`
 		if (props.isToday)
 			return css`
-				background-color: lightblue;
-				color: white;
+				background-color: ${theme.success(85)};
+				color: ${theme.success(42)};
 			`
 		return css`
 			background-color: transparent;
 			color: black;
 		`
 	}}
-	border: 1px solid rgba(162, 156, 156, 0.53);
+	border: 1px solid ${theme.mono(92)};
 	border-radius: 0;
 	padding: 4px;
 	text-align: center;
 	transition: background-color 0.2s ease-in-out;
 
 	&:hover {
-		background-color: lightblue;
-		color: white;
+		background-color: ${theme.accent(92)};
+		color: ${theme.accent(42)};
 		cursor: pointer;
 	}
 `
@@ -480,15 +481,13 @@ const DayCell = styled.span<ODayCellFactory & {isSelected: boolean}>`
  * @component
  */
 const NavButton = styled(BasedButton)`
-	background-color: transparent;
+	color: ${theme.accent(20)};
+	background-color: ${theme.accent(95)};
 	font-size: 1rem;
 
-	&:hover {
-		background-color: lightblue;
-	}
-
+	&:hover,
 	&:active {
-		background-color: lightblue;
+		background-color: ${theme.accent(92)};
 	}
 `
 
@@ -531,6 +530,8 @@ const BackToTodayButton = styled(
 )`
 	place-self: center;
 	padding: 8px;
+	color: ${theme.accent(20)};
+	background-color: ${theme.accent(95)};
 `
 
 const ValidateButton = styled(({handler: onClose, className}: OButtonProps & OClassName) => {
@@ -544,6 +545,8 @@ const ValidateButton = styled(({handler: onClose, className}: OButtonProps & OCl
 })`
 	place-self: center;
 	padding: 8px;
+	color: ${theme.success(20)};
+	background-color: ${theme.success(95)};
 `
 
 /**
@@ -612,9 +615,9 @@ const VisibleDate = styled((props: OClassName) => {
 						</select>
 					)
 				return (
-					<p onClick={() => setEditableMonth(true)}>
+					<BasedButton onClick={() => setEditableMonth(true)}>
 						{convertMonthToString(calendar.displayedDate.getMonth())}
-					</p>
+					</BasedButton>
 				)
 			})()}
 			{(() => {
@@ -642,9 +645,9 @@ const VisibleDate = styled((props: OClassName) => {
 						</select>
 					)
 				return (
-					<p onClick={() => setEditableYear(true)}>
+					<BasedButton onClick={() => setEditableYear(true)}>
 						{calendar.displayedDate.getFullYear()}
-					</p>
+					</BasedButton>
 				)
 			})()}
 		</span>
@@ -720,6 +723,8 @@ export const CloseButton = styled(({className, handler: onClose}: OButtonProps &
 	)
 })`
 	padding: 12px;
+	color: ${theme.error(12)};
+	background-color: ${theme.error(98)};
 `
 //endregion
 //region organisms

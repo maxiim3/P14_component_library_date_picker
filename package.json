@@ -2,7 +2,7 @@
 	"name": "maxiim3-date-picker",
 	"private": false,
   "author": "Maxime Tamburrini | maxiim3",
-  "version": "1.0.0",
+  "version": "1.0.1",
 	"type": "module",
 	"main": "src/main.tsx",
 	"files": [

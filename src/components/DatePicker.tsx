@@ -5,6 +5,7 @@ import {createPortal} from "react-dom"
 import {Calendar, convertDateToLocalString, useCalendarApi} from "./Calendar"
 import {BsFillCalendarEventFill} from "react-icons/all"
 import BasedButton from "./atoms/based.button.styled"
+import {theme} from "../Theme"
 
 //region components
 //region atoms
@@ -22,15 +23,17 @@ const ContainerStyled = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	width: 450px;
-	background-color: hsl(0, 0%, 95%);
+	background-color: ${theme.mono(98)};
+	color: ${theme.mono(12)};
 	border-radius: 4px;
 	padding: 4px 8px;
 	margin-inline: auto;
 	gap: 4px;
 	position: relative;
+	font-size: 16px;
 
 	label {
-		font-size: 1em;
+		font-size: 1.2em;
 		font-weight: 500;
 		user-select: none;
 		pointer-events: none;
@@ -106,7 +109,7 @@ const OpenCalendarButton = styled(({onOpen, isOpened, className}: TOpenCalendarB
  * @return {JSX.Element}
  * @constructor
  */
-export function DatePicker({inputLabel}: {inputLabel: string}) {
+export function DatePicker({inputLabel, className}: {inputLabel: string} & OClassName) {
 	//region state
 
 	const slug = useRef(inputLabel.trim().toLowerCase().split(" ").join("-")).current
@@ -147,8 +150,8 @@ export function DatePicker({inputLabel}: {inputLabel: string}) {
 	//region render component
 	return (
 		<>
-			<ContainerStyled>
-				<h2>{inputLabel}</h2>
+			<ContainerStyled className={className}>
+				<label>{inputLabel}</label>
 				<p>
 					{
 						calendar?.selectedDate

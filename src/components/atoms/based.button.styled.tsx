@@ -1,21 +1,22 @@
 import styled from "styled-components"
+import {theme} from "../../Theme"
 
 const BasedButton = styled.button`
 	border: none;
 	border-radius: 4px;
-	transition: background-color 120ms ease-in-out, scale 60ms ease-in-out;
-	background-color: hsl(0, 0%, 95%);
-	color: hsl(0, 0%, 30%);
+	transition: all 80ms ease-in-out;
+	background-color: ${theme.mono(95)};
+	color: ${theme.mono(45)};
 
 	&:hover {
-		background-color: hsl(0, 1%, 90%);
+		background-color: ${theme.mono(90)};
 		cursor: pointer;
-		color: hsl(0, 0%, 10%);
+		color: ${theme.mono(20)};
 	}
 
 	&:active {
-		background-color: hsl(0, 0%, 90%);
-		color: hsl(0, 0%, 10%);
+		background-color: ${theme.mono(90)};
+		color: ${theme.mono(20)};
 		scale: 0.9;
 	}
 `
