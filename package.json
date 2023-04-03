@@ -1,13 +1,13 @@
 {
 	"name": "maxiim3-date-picker",
 	"private": false,
-  "author": "Maxime Tamburrini | maxiim3",
-  "version": "1.0.1",
+	"author": "Maxime Tamburrini | maxiim3",
+	"version": "1.0.2",
 	"type": "module",
 	"main": "src/main.tsx",
+	"description": "A custom Date Picker built with React. V1.0.2 : Added colors and customization",
 	"files": [
-		"src",
-		"index.ts"
+		"src/index.ts"
 	],
 	"scripts": {
 		"dev": "vite",

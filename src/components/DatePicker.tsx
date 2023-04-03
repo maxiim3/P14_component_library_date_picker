@@ -68,11 +68,14 @@ type TOpenCalendarButtonProps = {
 const OpenCalendarButton = styled(({onOpen, isOpened, className}: TOpenCalendarButtonProps) => {
 	return (
 		<BasedButton
+			tabIndex={0}
+			aria-label={"Open Calendar"}
+			aria-describedby={"Select to open the calendar modal"}
 			className={className}
 			onClick={onOpen}
 			disabled={isOpened}>
-			<label>Open Calendar</label>
-			<span>
+			<label tabIndex={-1}>Open Calendar</label>
+			<span tabIndex={-1}>
 				<BsFillCalendarEventFill />
 			</span>
 		</BasedButton>
@@ -150,9 +153,9 @@ export function DatePicker({inputLabel, className}: {inputLabel: string} & OClas
 	//region render component
 	return (
 		<>
-			<ContainerStyled className={className}>
-				<label>{inputLabel}</label>
-				<p>
+			<ContainerStyled tabIndex={-1} aria-label={'date-picker'} className={className}>
+				<label tabIndex={0} aria-label={'Input Name'}>{inputLabel}</label>
+				<p tabIndex={0} aria-label={calendar?.selectedDate ? `Selected Value : ${calendar?.selectedDate}` : 'Please select a date'}>
 					{
 						calendar?.selectedDate
 							? convertDateToLocalString(calendar?.selectedDate)

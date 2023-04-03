@@ -442,7 +442,8 @@ const DayCell = styled.span<ODayCellFactory & {isSelected: boolean}>`
 	${props => {
 		if (props.isBlank)
 			return css`
-				background-color: gray;
+				background-color: ${theme.mono(82)};
+				pointer-events: none;
 			`
 
 		if (props.isSelected)
@@ -508,7 +509,12 @@ const NavButton = styled(BasedButton)`
 const SelectedDate = styled((props: OCalendarContextProp & OClassName) => {
 	const {selectedDate} = props.date
 	return (
-		<p className={props.className}>{convertDateToLocalString(selectedDate && selectedDate)}</p>
+		<p
+			tabIndex={selectedDate ? 0 : -1}
+			aria-label={selectedDate && `selected-date : ${selectedDate}`}
+			className={props.className}>
+			{convertDateToLocalString(selectedDate && selectedDate)}
+		</p>
 	)
 })`
 	place-self: center;
@@ -700,6 +706,8 @@ function RowsOfDays({days}: {days: ODayCellFactory[]}) {
 		<>
 			{days.map(day => (
 				<DayCell
+					tabIndex={day.isBlank ? -1 : 0}
+					aria-label={day.fullDate?.toDateString()}
 					isSelected={
 						day.fullDate === calendar.selectedDate
 					} /*todo Bug selection feedback is not persistant*/
@@ -774,13 +782,25 @@ export const Calendar = ({onClose}: CalendarProps) => {
 
 	//region render
 	return (
-		<Window>
-			<Container>
+		<Window tabIndex={-1}>
+			<Container
+				role={"dialog"}
+				aria-label={"Calendar opened"}>
 				<Header>
-					<Navigation>
-						<NavButton onClick={previousMonth}>{"<"}</NavButton>
+					<Navigation aria-label={"calendar navigation"}>
+						<NavButton
+							aria-label={"previous month button"}
+							aria-describedby={"Select to go to the previous month"}
+							onClick={previousMonth}>
+							{"<"}
+						</NavButton>
 						<VisibleDate />
-						<NavButton onClick={nextMonth}>{">"}</NavButton>
+						<NavButton
+							aria-label={"next month button"}
+							aria-describedby={"Select to go to the next month"}
+							onClick={nextMonth}>
+							{">"}
+						</NavButton>
 					</Navigation>
 					<CloseButton handler={onClose} />
 				</Header>
@@ -790,8 +810,14 @@ export const Calendar = ({onClose}: CalendarProps) => {
 				</Main>
 				<Footer>
 					<SelectedDate date={calendar} />
-					<BackToTodayButton handler={goBackToToday} />
-					<ValidateButton handler={onClose} />
+					<BackToTodayButton
+						aria-label={"Go back to today's date"}
+						handler={goBackToToday}
+					/>
+					<ValidateButton
+						aria-label={"close calendar"}
+						handler={onClose}
+					/>
 				</Footer>
 			</Container>
 			<BackdropBg />

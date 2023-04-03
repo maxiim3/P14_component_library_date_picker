@@ -1,3 +1,3 @@
-import {Maxiim3DatePicker} from "./components/maxiim3DatePicker"
+import {DatePickerComponent} from "./components/datePickerComponent"
 
-export default Maxiim3DatePicker
+export default DatePickerComponent
