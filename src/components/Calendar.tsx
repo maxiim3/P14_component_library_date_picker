@@ -1,4 +1,4 @@
-import React, {useContext, useMemo, useState} from "react"
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react"
 import styled, {css} from "styled-components"
 import {CalendarContext, ICalendarContext, OCalendarApi} from "../context"
 import {OButtonProps, OCalendarContextProp, OClassName, OClick} from "../types"
@@ -738,7 +738,7 @@ export const CloseButton = styled(({className, handler: onClose}: OButtonProps &
 //region organisms
 
 export type CalendarProps = {
-	onClose: (e: OClick) => void
+	onClose: () => void
 }
 /**
  * @description Main Calendar component that renders the calendar
@@ -754,6 +754,8 @@ export type CalendarProps = {
  */
 export const Calendar = ({onClose}: CalendarProps) => {
 	//region states & hooks
+	const containerRef = useRef() as React.MutableRefObject<HTMLDivElement>
+
 	const {calendar, setDisplayedDate} = useCalendarApi()
 	const {displayedDate} = calendar
 	const mayDays = useMemo(() => initDaysMapping(displayedDate), [displayedDate])
@@ -778,14 +780,27 @@ export const Calendar = ({onClose}: CalendarProps) => {
 		setDisplayedDate(e, today)
 	}
 
+	function closeOnEscape(e: KeyboardEvent) {
+		if (e.key === "Escape") return onClose()
+	}
+
+	useEffect(() => {
+		document.addEventListener("keydown", closeOnEscape)
+
+		return () => {
+			document.removeEventListener("keydown", closeOnEscape)
+		}
+	}, [])
+
 	//endregion
 
 	//region render
 	return (
 		<Window tabIndex={-1}>
 			<Container
+				ref={containerRef}
 				role={"dialog"}
-				aria-label={"Calendar opened"}>
+				aria-label={"Calendar Modal"}>
 				<Header>
 					<Navigation aria-label={"calendar navigation"}>
 						<NavButton

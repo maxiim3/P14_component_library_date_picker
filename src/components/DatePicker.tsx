@@ -114,27 +114,20 @@ const OpenCalendarButton = styled(({onOpen, isOpened, className}: TOpenCalendarB
  */
 export function DatePicker({inputLabel, className}: {inputLabel: string} & OClassName) {
 	//region state
-
 	const slug = useRef(inputLabel.trim().toLowerCase().split(" ").join("-")).current
 	const {calendar} = useCalendarApi()
 	const [calendarVisibility, setCalendarVisibility] = useState(false)
 
-	useEffect(() => {
-		// 	todo add a listener to the document to close the calendar when clicking outside
-		// 	todo add a listener to the document to close the calendar when pressing the escape key
-		// todo : optional :  add keyboard navigation
-		// todo add to local storage
-		const saveDate = () => {
-			if (calendar?.selectedDate) {
-				if (sessionStorage.getItem(slug)) {
-					sessionStorage.removeItem(slug)
-				}
-				sessionStorage.setItem(slug, calendar.selectedDate.toDateString())
+	const saveDate = () => {
+		if (calendar?.selectedDate) {
+			if (sessionStorage.getItem(slug)) {
+				sessionStorage.removeItem(slug)
 			}
+			sessionStorage.setItem(slug, calendar.selectedDate.toDateString())
 		}
+	}
 
-		saveDate()
-	}, [calendar])
+	useEffect(() => saveDate(), [calendar])
 	//endregion
 
 	//region handlers
@@ -143,19 +136,30 @@ export function DatePicker({inputLabel, className}: {inputLabel: string} & OClas
 		setCalendarVisibility(true)
 	}, [])
 
-	const closeCalendar = useCallback((e: OClick) => {
-		e.preventDefault()
-		setCalendarVisibility(false)
-	}, [])
+	const closeCalendar = () => setCalendarVisibility(false)
+
 
 	//endregion
 
 	//region render component
 	return (
 		<>
-			<ContainerStyled tabIndex={-1} aria-label={'date-picker'} className={className}>
-				<label tabIndex={0} aria-label={'Input Name'}>{inputLabel}</label>
-				<p tabIndex={0} aria-label={calendar?.selectedDate ? `Selected Value : ${calendar?.selectedDate}` : 'Please select a date'}>
+			<ContainerStyled
+				tabIndex={-1}
+				aria-label={"date-picker"}
+				className={className}>
+				<label
+					tabIndex={0}
+					aria-label={"Input Name"}>
+					{inputLabel}
+				</label>
+				<p
+					tabIndex={0}
+					aria-label={
+						calendar?.selectedDate
+							? `Selected Value : ${calendar?.selectedDate}`
+							: "Please select a date"
+					}>
 					{
 						calendar?.selectedDate
 							? convertDateToLocalString(calendar?.selectedDate)
