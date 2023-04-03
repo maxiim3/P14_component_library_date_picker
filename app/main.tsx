@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import {DatePickerComponent} from "./components/datePickerComponent"
+import {Maxiim3DatePicker} from "../src/components/maxiim3DatePicker"
 
 //region __ROOT
 const $rootDiv: HTMLElement = document.getElementById("root") as HTMLDivElement
@@ -11,7 +11,7 @@ const Root = ReactDOM.createRoot($rootDiv)
 
 Root.render(
 	<React.StrictMode>
-		<DatePickerComponent inputLabel={'Date of Birth'} />
+		<Maxiim3DatePicker inputLabel={'Date of Birth'} />
 	</React.StrictMode>
 )
 //endregion

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {theme} from "../../Theme"
+import {theme} from "../../misc/Theme"
 
 const BasedButton = styled.button`
 	border: none;

@@ -23,13 +23,13 @@ yarn add  maxiim3-date-picker
 ## Usage
 
 ```tsx
-import {DatePickerComponent} from " maxiim3-date-picker"
+import {Maxiim3DatePicker} from " maxiim3-date-picker"
 
 function App() {
 	return (
 		<div>
 			<h1>Select a Date</h1>
-			<DatePickerComponent inputLabel={"Date of Birth"} />
+			<Maxiim3DatePicker inputLabel={"Date of Birth"} />
 		</div>
 	)
 }
@@ -37,7 +37,7 @@ function App() {
 
 ## Props
 
-The `DatePickerComponent` component accepts the following props:
+The `Maxiim3DatePicker` component accepts the following props:
 
 | Prop Name    | Type     | Required |          Description           |
 |--------------|----------|----------|:------------------------------:|

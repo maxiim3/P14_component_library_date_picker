@@ -1,11 +1,11 @@
 import styled from "styled-components"
 import React, {useCallback, useEffect, useRef, useState} from "react"
-import {OClassName, OClick} from "../types"
+import {OClassName, OClick} from "../misc/types"
 import {createPortal} from "react-dom"
 import {Calendar, convertDateToLocalString, useCalendarApi} from "./Calendar"
 import {BsFillCalendarEventFill} from "react-icons/all"
 import BasedButton from "./atoms/based.button.styled"
-import {theme} from "../Theme"
+import {theme} from "../misc/Theme"
 
 //region components
 //region atoms

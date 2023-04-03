@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useMemo, useRef, useState} from "react"
 import styled, {css} from "styled-components"
-import {CalendarContext, ICalendarContext, OCalendarApi} from "../context"
-import {OButtonProps, OCalendarContextProp, OClassName, OClick} from "../types"
+import {CalendarContext, ICalendarContext, OCalendarApi} from "../misc/context"
+import {OButtonProps, OCalendarContextProp, OClassName, OClick} from "../misc/types"
 import BasedButton from "./atoms/based.button.styled"
 import {AiOutlineCheck} from "react-icons/all"
-import {theme} from "../Theme"
+import {theme} from "../misc/Theme"
 
 //region models
 /**
