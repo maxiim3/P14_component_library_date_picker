@@ -1,0 +1,108 @@
+.container {
+	font-size: 0.8rem;
+	position: relative;
+	z-index: 2;
+	top: 0.33vh;
+	left: 0.33vh;
+	width: clamp(250px, 50vw, 500px);
+	padding: 8px 12px;
+	border: 1px solid black;
+	border-radius: 8px;
+	background: hsl(0, 0%, 90%);
+	isolation: inherit;
+	margin-inline: auto;
+}
+
+.window {
+	position: fixed;
+	z-index: 0;
+	top: 0;
+	left: 0;
+	display: grid;
+	overflow: hidden;
+	width: 100vw;
+	height: 100vh;
+	isolation: isolate;
+	place-content: center;
+}
+
+.backdrop {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	content: "";
+	background-color: hsla(0, 0%, 30%, 0.5);
+	isolation: inherit;
+	backdrop-filter: blur(2px);
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	gap: 12px;
+}
+
+.navigation {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 75%;
+	margin-inline: auto;
+}
+
+.main {
+	display: grid;
+	grid: repeat(7, 1fr) / repeat(7, 1fr);
+}
+
+.footer {
+	display: grid;
+	align-items: center;
+	justify-content: center;
+	grid-template-columns: 1fr auto 1fr;
+	gap: 12px;
+}
+
+.dayOfWeekCell {
+	font-weight: bold;
+	text-align: center;
+}
+
+.dayCell {
+	padding: 4px;
+	transition: background-color 0.2s ease-in-out;
+	text-align: center;
+	border: 1px solid hsl(0, 0%, 92%);
+	border-radius: 0;
+}
+
+.dayCell:hover {
+	cursor: pointer;
+	color: hsl(214, 66%, 42%);
+	background-color: hsl(214, 66%, 92%);
+}
+
+.dayCell__isBlank {
+	pointer-events: none;
+	background-color: hsl(0, 0%, 82%);
+}
+
+.dayCel__isSelected {
+	color: hsl(214, 66%, 35%);
+	background-color: hsl(214, 66%, 80);
+}
+
+.dayCell__isToday {
+	color: hsl(97, 66%, 42%);
+	background-color: hsl(97, 66%, 85%);
+}
+
+.dayCell__default {
+	color: black;
+	background-color: transparent;
+}

@@ -1,4 +1,3 @@
-//region context
 import {createContext, useCallback, useReducer} from "react"
 import {OClick} from "./types"
 
@@ -116,5 +115,3 @@ export type OCalendarApi = ReturnType<typeof initialCalendarContextFactory>
  * @see initialCalendarContextFactory
  */
 export const CalendarContext = createContext<OCalendarApi | undefined>(undefined)
-
-//endregion

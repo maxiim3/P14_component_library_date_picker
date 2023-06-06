@@ -1,56 +1,10 @@
-import styled from "styled-components"
 import React, {useCallback, useEffect, useRef, useState} from "react"
 import {OClassName, OClick} from "../misc/types"
 import {createPortal} from "react-dom"
 import {Calendar, convertDateToLocalString, useCalendarApi} from "./Calendar"
 import {BsFillCalendarEventFill} from "react-icons/all"
 import BasedButton from "./atoms/based.button.styled"
-import {theme} from "../misc/Theme"
-
-//region components
-//region atoms
-/**
- * @description Displays styles for the container and its children
- * @see DatePicker
- * @styled-components
- * @container
- * @atom
- */
-const ContainerStyled = styled.div`
-	display: flex;
-	flex-direction: row;
-	flex-flow: nowrap;
-	justify-content: space-between;
-	align-items: center;
-	width: 450px;
-	background-color: ${theme.mono(98)};
-	color: ${theme.mono(12)};
-	border-radius: 4px;
-	padding: 4px 8px;
-	margin-inline: auto;
-	gap: 4px;
-	position: relative;
-	font-size: 16px;
-
-	label {
-		font-size: 1.2em;
-		font-weight: 500;
-		user-select: none;
-		pointer-events: none;
-	}
-
-	p {
-		padding: 12px 12px;
-		font-size: 1em;
-	}
-`
-//endregion
-
-//region molecules
-/**
- * @description Types for the OpenCalendarButton component's props
- * @see OpenCalendarButton
- * **/
+import styles from "/datePickerUI.module.css"
 
 type TOpenCalendarButtonProps = {
 	onOpen: (e: OClick) => void
@@ -60,14 +14,14 @@ type TOpenCalendarButtonProps = {
 /**
  * @description Displays styles for the button that opens the calendar and its children
  * @see DatePicker
- * @styled-components
  * @button
  * @molecule
  * @component
  **/
-const OpenCalendarButton = styled(({onOpen, isOpened, className}: TOpenCalendarButtonProps) => {
+const OpenCalendarButton = ({onOpen, isOpened, className}: TOpenCalendarButtonProps) => {
 	return (
 		<BasedButton
+			openCalendarButton
 			tabIndex={0}
 			aria-label={"Open Calendar"}
 			aria-describedby={"Select to open the calendar modal"}
@@ -80,21 +34,8 @@ const OpenCalendarButton = styled(({onOpen, isOpened, className}: TOpenCalendarB
 			</span>
 		</BasedButton>
 	)
-})`
-	display: flex;
-	flex-direction: row;
-	flex-flow: nowrap;
-	justify-content: center;
-	align-items: center;
+}
 
-	gap: 6px;
-	font-size: 0.6rem;
-	letter-spacing: 0.8px;
-	width: 85px;
-	padding: 8px 12px;
-`
-//endregion
-//region organisms
 /**
  * # Date Picker
  * @description Main Date Picker component
@@ -113,7 +54,6 @@ const OpenCalendarButton = styled(({onOpen, isOpened, className}: TOpenCalendarB
  * @constructor
  */
 export function DatePicker({inputLabel, className}: {inputLabel: string} & OClassName) {
-	//region state
 	const slug = useRef(inputLabel.trim().toLowerCase().split(" ").join("-")).current
 	const {calendar} = useCalendarApi()
 	const [calendarVisibility, setCalendarVisibility] = useState(false)
@@ -128,9 +68,6 @@ export function DatePicker({inputLabel, className}: {inputLabel: string} & OClas
 	}
 
 	useEffect(() => saveDate(), [calendar])
-	//endregion
-
-	//region handlers
 	const openCalendar = useCallback((e: OClick) => {
 		e.preventDefault()
 		setCalendarVisibility(true)
@@ -138,22 +75,20 @@ export function DatePicker({inputLabel, className}: {inputLabel: string} & OClas
 
 	const closeCalendar = () => setCalendarVisibility(false)
 
-
-	//endregion
-
-	//region render component
 	return (
 		<>
-			<ContainerStyled
+			<div
 				tabIndex={-1}
 				aria-label={"date-picker"}
-				className={className}>
+				className={styles.stack}>
 				<label
+					className={styles.label}
 					tabIndex={0}
 					aria-label={"Input Name"}>
 					{inputLabel}
 				</label>
 				<p
+					className={styles.p}
 					tabIndex={0}
 					aria-label={
 						calendar?.selectedDate
@@ -171,14 +106,9 @@ export function DatePicker({inputLabel, className}: {inputLabel: string} & OClas
 					onOpen={openCalendar}
 					isOpened={calendarVisibility}
 				/>
-			</ContainerStyled>
+			</div>
 			{calendarVisibility &&
 				createPortal(<Calendar onClose={closeCalendar} />, document.body)}
 		</>
 	)
-	//endregion
 }
-
-//endregion
-
-//endregion

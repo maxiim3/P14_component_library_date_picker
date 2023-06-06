@@ -1,24 +1,25 @@
-import styled from "styled-components"
-import {theme} from "../../misc/Theme"
+import styles from "./button.module.css"
+import styled from "../../lib/registery"
 
-const BasedButton = styled.button`
-	border: none;
-	border-radius: 4px;
-	transition: all 80ms ease-in-out;
-	background-color: ${theme.mono(95)};
-	color: ${theme.mono(45)};
-
-	&:hover {
-		background-color: ${theme.mono(90)};
-		cursor: pointer;
-		color: ${theme.mono(20)};
-	}
-
-	&:active {
-		background-color: ${theme.mono(90)};
-		color: ${theme.mono(20)};
-		scale: 0.9;
-	}
-`
+const BasedButton = styled("button", {
+	css: styles.button,
+	variants: {
+		isNavButton: {
+			true: styles.navButton,
+		},
+		backButton: {
+			true: styles.backButton,
+		},
+		validation: {
+			true: styles.buttonValidation,
+		},
+		closeButton: {
+			true: styles.closeButton,
+		},
+		openCalendarButton: {
+			true: styles.openCalendar
+		}
+	},
+})
 
 export default BasedButton

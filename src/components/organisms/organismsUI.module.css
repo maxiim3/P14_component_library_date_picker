@@ -1,0 +1,13 @@
+.selectDate {
+	font-family: inherit;
+	font-size: 1rem;
+	font-weight: bold;
+	place-self: center;
+}
+
+.visibleDate {
+	font-family: inherit;
+	font-size: 1rem;
+	display: flex;
+	gap: 8px;
+}
