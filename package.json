@@ -2,9 +2,9 @@
 	"name": "maxiim3-date-picker",
 	"private": false,
 	"author": "Maxime Tamburrini | maxiim3",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"type": "module",
-	"description": "A custom Date Picker built with React. V1.1.0 : Added custom CSS and accessibility | fix bug from 1.0.5",
+	"description": "A custom Date Picker built with React. V1.2.0 : Added custom CSS and accessibility ",
 	"files": [
 		"./index.tsx",
 		"./src/*"
@@ -14,8 +14,6 @@
 		"build": "tsc && vite build",
 		"preview": "vite preview",
 		"commits": "git log -n 10 --oneline",
-		"storybook": "start-storybook -p 6006",
-		"build-storybook": "build-storybook"
 	},
 	"dependencies": {
 		"@phntms/css-components": "^0.4.0",
