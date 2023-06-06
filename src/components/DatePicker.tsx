@@ -4,7 +4,7 @@ import {createPortal} from "react-dom"
 import {Calendar, convertDateToLocalString, useCalendarApi} from "./Calendar"
 import {BsFillCalendarEventFill} from "react-icons/all"
 import BasedButton from "./atoms/based.button.styled"
-import styles from "/datePickerUI.module.css"
+import styles from "./datePickerUI.module.css"
 
 type TOpenCalendarButtonProps = {
 	onOpen: (e: OClick) => void
